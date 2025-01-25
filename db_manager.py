@@ -2,16 +2,16 @@ import csv
 
 def mostrar():
     stocklist = []
-    with open('estoque.csv', 'r') as estoque:
+    with open('AED1_Trabalho/estoque.csv', 'r') as estoque:
         reader = csv.reader(estoque)
-        next(reader)  # Pular a primeira linha (cabeçalho)
+        next(reader)
         for linha in reader:
             produto, quantidade = linha
             stocklist.append(f"Há {quantidade} unidades de {produto} no estoque.")
     return stocklist
         
 def remove(produto):
-    with open('estoque.csv', 'r') as estoque:
+    with open('AED1_Trabalho/estoque.csv', 'r') as estoque:
         linhas = estoque.readlines()
     if produto == '':
         linhas_filtradas = [linha for linha in linhas]
@@ -19,11 +19,11 @@ def remove(produto):
         linhas_filtradas = [linha for linha in linhas if produto != linha.split(',')[0]]
             
 
-    with open('estoque.csv','w') as estoque:
+    with open('AED1_Trabalho/estoque.csv','w') as estoque:
         estoque.writelines(linhas_filtradas)
 
 def compras(produto, comprado):
-    with open('estoque.csv', 'r') as estoque:
+    with open('AED1_Trabalho/estoque.csv', 'r') as estoque:
         linhas = estoque.readlines()
     cabeçalho = linhas[0]
     linhas_atualizadas = [cabeçalho]  
@@ -33,7 +33,7 @@ def compras(produto, comprado):
         nome, quantidade_str = linha.strip().split(',')
         quantidade = int(quantidade_str)
 
-        if nome == produto:
+        if nome.lower() == produto.lower():
             produto_encontrado = True
             if comprado < 0:
                 nova_quantidade = quantidade + comprado
@@ -53,26 +53,24 @@ def compras(produto, comprado):
         print(f"Produto '{produto}' não encontrado no estoque.")
             
 
-    with open('trabalho_AED/estoque.csv', 'w') as estoque:
+    with open('AED1_Trabalho/estoque.csv', 'w') as estoque:
         estoque.writelines(linhas_atualizadas)
 
 def adicionar(produto, quantidade, menu):
-    with open('estoque.csv', 'r') as estoque:
+    with open('AED1_Trabalho/estoque.csv', 'r') as estoque:
         linhas = estoque.readlines()
         if menu == 'add produto':
             repetido = False
             for linha in linhas:
                 estoque = linha.split(',')[0]
                 if produto == estoque:
-                    print('Esse produto já está no estoque caso queira adionar mais\nquantidades, por favor selecionar add quantidade no menu!')
-                    repetido = True
-                    break
+                    return ('Esse produto já está no estoque caso queira adionar mais\nquantidades, por favor selecionar add quantidade no menu!')
             if not repetido: 
                 if len(linhas) == 1:
                     linhas.append(f'{produto},{quantidade}')
                 else:
                     linhas.append(f'\n{produto},{quantidade}')
-                with open('estoque.csv', 'w') as estoque:
+                with open('AED1_Trabalho/estoque.csv', 'w') as estoque:
                     estoque.writelines(linhas)
         elif menu == 'add quantidade':
             linhas_atualizadas = []
@@ -85,5 +83,5 @@ def adicionar(produto, quantidade, menu):
                     linhas_atualizadas.append(nova_linha)
                 else:
                     linhas_atualizadas.append(linha)
-                with open('estoque.csv', 'w') as estoque:
+                with open('AED1_Trabalho/estoque.csv', 'w') as estoque:
                     estoque.writelines(linhas_atualizadas)
